@@ -129,8 +129,6 @@ class MarketPlaceRepositoryImpl @Inject constructor(
             
             Result.success(Unit)
         } catch (e: Exception) {
-            // If network fails, it stays in DB as unsynced (syncStatus = 0)
-            // It will show up correctly because it's in the DB.
             Result.success(Unit)
         }
     }
