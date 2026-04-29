@@ -123,8 +123,8 @@ fun ListingItem(
                         .fillMaxWidth()
                         .height(200.dp),
                     contentScale = ContentScale.Crop,
-                    placeholder = painterResource(R.drawable.ic_market_avatar),
-                    error = painterResource(R.drawable.ic_market_avatar)
+                    placeholder = painterResource(R.drawable.ic_place_holder),
+                    error = painterResource(R.drawable.ic_place_holder)
                 )
                 
                 Surface(

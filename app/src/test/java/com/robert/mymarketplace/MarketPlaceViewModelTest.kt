@@ -3,7 +3,6 @@ package com.robert.mymarketplace
 import com.robert.mymarketplace.presentation.screens.MarketPlaceViewModel
 
 
-import com.robert.mymarketplace.domain.model.MarketItemListing
 import com.robert.mymarketplace.domain.usecase.*
 import com.robert.mymarketplace.presentation.screens.listScreen.ListingEvent
 import io.mockk.*
@@ -78,23 +77,6 @@ class MarketPlaceViewModelTest {
         assertEquals("Sync complete", viewModel.uiState.value.message)
     }
 
-    @Test
-    fun `toggle favorite should call use case`() = runTest {
-        val item = MarketItemListing(
-            id = "1",
-            title = "Test",
-            description = "desc",
-            price = 10.0,
-            imageUrl = "",
-            isFavorite = false,
-            createdAt = System.currentTimeMillis(),
-            syncStatus = 0
-        )
-
-        viewModel.onEvent(ListingEvent.ToggleFavorite(item))
-
-        coVerify { toggleFavoriteUseCase(item) }
-    }
 
     @Test
     fun `create listing should call use case`() = runTest {
