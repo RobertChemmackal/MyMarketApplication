@@ -12,5 +12,5 @@ data class ListingEntity(
     val imageUrl: String,
     val isFavorite: Boolean,
     val createdAt: Long,
-    val isSynced: Boolean
+    val syncStatus: Int
 )

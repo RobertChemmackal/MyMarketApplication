@@ -8,5 +8,5 @@ data class MarketItemListing(
     val imageUrl: String,
     val isFavorite: Boolean,
     val createdAt: Long,
-    val isSynced: Boolean = true
+    val syncStatus: Int = 1
 )

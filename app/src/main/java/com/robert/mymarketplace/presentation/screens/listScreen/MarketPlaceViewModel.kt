@@ -121,7 +121,7 @@ class MarketPlaceViewModel @Inject constructor(
                 imageUrl = imageUri ?: "",
                 isFavorite = false,
                 createdAt = System.currentTimeMillis(),
-                isSynced = false
+                syncStatus = 0
             )
             createListingUseCase(newListing)
         }

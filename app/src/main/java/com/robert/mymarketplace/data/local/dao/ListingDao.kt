@@ -9,13 +9,16 @@ interface ListingDao {
     @Query("SELECT * FROM listings ORDER BY createdAt DESC")
     fun getAllListings(): Flow<List<ListingEntity>>
 
+    @Query("SELECT * FROM listings")
+    suspend fun getAllListingsList(): List<ListingEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertListings(listings: List<ListingEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertListing(listing: ListingEntity)
 
-    @Query("SELECT * FROM listings WHERE isSynced = 0")
+    @Query("SELECT * FROM listings WHERE syncStatus = 0")
     suspend fun getUnsyncedListings(): List<ListingEntity>
 
     @Query("SELECT * FROM listings WHERE id = :id")

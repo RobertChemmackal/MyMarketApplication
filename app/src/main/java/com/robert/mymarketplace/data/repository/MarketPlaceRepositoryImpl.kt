@@ -25,7 +25,23 @@ class MarketPlaceRepositoryImpl @Inject constructor(
     override suspend fun refreshListings(): Result<Unit> {
         return try {
             val response = api.getListings()
-            dao.upsertListings(response.map { it.toListingEntity() })
+            val remoteEntities = response.map { it.toListingEntity() }
+            
+            // Get all local listings to preserve favorite status even if synced
+            // Since the mock server doesn't persist changes, we trust local favorites
+            val localListings = dao.getAllListingsList().associateBy { it.id }
+            
+            val finalEntities = remoteEntities.map { remote ->
+                localListings[remote.id]?.let { local ->
+                    // Favor local favorite status and maintain syncStatus if it's still 0
+                    remote.copy(
+                        isFavorite = local.isFavorite, 
+                        syncStatus = if (local.syncStatus == 0) 0 else remote.syncStatus
+                    )
+                } ?: remote
+            }
+            
+            dao.upsertListings(finalEntities)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -34,24 +50,24 @@ class MarketPlaceRepositoryImpl @Inject constructor(
 
     override suspend fun createListing(marketItemListing: MarketItemListing): Result<Unit> {
         return try {
-            // Save locally first with isSynced = false
-            val localListing = marketItemListing.copy(isSynced = false)
+            // Save locally first with syncStatus = 0 (Unsynced)
+            val localListing = marketItemListing.copy(syncStatus = 0)
             dao.upsertListing(localListing.toListingEntity())
             
             // Try to sync with remote
             val response = api.createListing(marketItemListing.toListingDto())
-            // If successful, update local with isSynced = true and the real ID if changed
+            // If successful, update local with syncStatus = 1
             dao.upsertListing(response.toListing().toListingEntity())
             Result.success(Unit)
         } catch (e: Exception) {
-            // Stay unsynced in local DB
+            // Stay unsynced (syncStatus = 0) in local DB
             Result.failure(e)
         }
     }
 
     override suspend fun updateListing(marketItemListing: MarketItemListing): Result<Unit> {
         return try {
-            val localListing = marketItemListing.copy(isSynced = false)
+            val localListing = marketItemListing.copy(syncStatus = 0)
             dao.upsertListing(localListing.toListingEntity())
             
             val response = api.updateListing(marketItemListing.id, marketItemListing.toListingDto())
@@ -64,7 +80,12 @@ class MarketPlaceRepositoryImpl @Inject constructor(
 
     override suspend fun syncListing(marketItemListing: MarketItemListing): Result<Unit> {
         return try {
-            val response = api.createListing(marketItemListing.toListingDto())
+            // Try updating first, if it fails maybe it needs to be created
+            val response = try {
+                api.updateListing(marketItemListing.id, marketItemListing.toListingDto())
+            } catch (e: Exception) {
+                api.createListing(marketItemListing.toListingDto())
+            }
             dao.upsertListing(response.toListing().toListingEntity())
             Result.success(Unit)
         } catch (e: Exception) {
@@ -75,23 +96,42 @@ class MarketPlaceRepositoryImpl @Inject constructor(
     override suspend fun syncPendingListings(): Result<Unit> {
         return try {
             val unsynced = dao.getUnsyncedListings()
-            unsynced.forEach { entity ->
-                val response = api.createListing(entity.toListing().toListingDto())
-                dao.upsertListing(response.toListing().toListingEntity())
-            }
+            if (unsynced.isEmpty()) return Result.success(Unit)
+
+            val response = api.syncListings(unsynced.map { it.toListing().toListingDto() })
+            dao.upsertListings(response.map { it.toListingEntity() })
+            
             Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
+        } catch (_: Exception) {
+            try {
+                val unsynced = dao.getUnsyncedListings()
+                unsynced.forEach { entity ->
+                    syncListing(entity.toListing())
+                }
+                Result.success(Unit)
+            } catch (innerException: Exception) {
+                Result.failure(innerException)
+            }
         }
     }
 
     override suspend fun toggleFavorite(marketItemListing: MarketItemListing): Result<Unit> {
         return try {
-            val updatedListing = marketItemListing.copy(isFavorite = !marketItemListing.isFavorite)
+            val updatedListing = marketItemListing.copy(
+                isFavorite = !marketItemListing.isFavorite,
+                syncStatus = 0
+            )
             dao.upsertListing(updatedListing.toListingEntity())
+            
+            // Try to sync the favorite status to remote
+            val response = api.updateListing(updatedListing.id, updatedListing.toListingDto())
+            dao.upsertListing(response.toListing().toListingEntity())
+            
             Result.success(Unit)
         } catch (e: Exception) {
-            Result.failure(e)
+            // If network fails, it stays in DB as unsynced (syncStatus = 0)
+            // It will show up correctly because it's in the DB.
+            Result.success(Unit)
         }
     }
 }

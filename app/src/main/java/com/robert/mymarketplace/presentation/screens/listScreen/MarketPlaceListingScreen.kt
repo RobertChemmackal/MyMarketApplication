@@ -128,11 +128,11 @@ fun ListingItem(
                 )
                 
                 Surface(
-                    onClick = { if (!marketItemListing.isSynced) onSyncClick() },
+                    onClick = { if (marketItemListing.syncStatus == 0) onSyncClick() },
                     modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
                     shape = MaterialTheme.shapes.small,
                     color = Color.Black.copy(alpha = 0.6f),
-                    enabled = !marketItemListing.isSynced
+                    enabled = marketItemListing.syncStatus == 0
                 ) {
                     Row(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -140,12 +140,12 @@ fun ListingItem(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
-                            imageVector = if (marketItemListing.isSynced) Icons.Default.Sync else Icons.Default.SyncDisabled,
+                            imageVector = if (marketItemListing.syncStatus == 1) Icons.Default.Sync else Icons.Default.SyncDisabled,
                             contentDescription = stringResource(R.string.sync_status_content_description),
-                            tint = if (marketItemListing.isSynced) Color.Green else Color.White,
+                            tint = if (marketItemListing.syncStatus == 1) Color.Green else Color.White,
                             modifier = Modifier.size(16.dp)
                         )
-                        if (!marketItemListing.isSynced) {
+                        if (marketItemListing.syncStatus == 0) {
                             Text(
                                 text = stringResource(R.string.sync_now),
                                 color = Color.White,
@@ -157,7 +157,7 @@ fun ListingItem(
                 }
 
 
-                if (uiState.isLoading && marketItemListing.isSynced) {
+                if (uiState.isLoading && marketItemListing.syncStatus == 1) {
                      // Optionally show a small loader here if refreshing
                 }
 

@@ -13,7 +13,7 @@ fun ListingDto.toListing(): MarketItemListing {
         imageUrl = imageUrl,
         isFavorite = isFavorite,
         createdAt = createdAt,
-        isSynced = true
+        syncStatus = 1
     )
 }
 
@@ -38,7 +38,7 @@ fun ListingEntity.toListing(): MarketItemListing {
         imageUrl = imageUrl,
         isFavorite = isFavorite,
         createdAt = createdAt,
-        isSynced = isSynced
+        syncStatus = syncStatus
     )
 }
 
@@ -51,7 +51,7 @@ fun MarketItemListing.toListingEntity(): ListingEntity {
         imageUrl = imageUrl,
         isFavorite = isFavorite,
         createdAt = createdAt,
-        isSynced = isSynced
+        syncStatus = syncStatus
     )
 }
 
@@ -64,6 +64,6 @@ fun ListingDto.toListingEntity(): ListingEntity {
         imageUrl = imageUrl,
         isFavorite = isFavorite,
         createdAt = createdAt,
-        isSynced = true
+        syncStatus = 1
     )
 }
