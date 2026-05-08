@@ -21,4 +21,7 @@ interface ListingDao {
     @Query("SELECT * FROM listings WHERE syncStatus = 0")
     suspend fun getUnsyncedListings(): List<ListingEntity>
 
+    @Query("DELETE FROM listings WHERE id = :id")
+    suspend fun deleteListingById(id: String)
+
 }

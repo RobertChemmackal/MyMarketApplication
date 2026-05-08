@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.robert.mymarketplace.data.local.dao.ListingDao
 import com.robert.mymarketplace.data.local.entity.ListingEntity
 
-@Database(entities = [ListingEntity::class], version = 3, exportSchema = false)
+@Database(entities = [ListingEntity::class], version = 4, exportSchema = false)
 abstract class MarketPlaceDatabase : RoomDatabase() {
     abstract fun listingDao(): ListingDao
 }

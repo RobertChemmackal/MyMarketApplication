@@ -9,6 +9,7 @@ data class MarketItemListing(
     val isFavorite: Boolean,
     val createdAt: Long,
     val syncStatus: Int = 1,
+    val network: Int = 1,
     val phoneNumber: String = "+254700000000",
     val ownerName: String = "Unknown Owner"
 )

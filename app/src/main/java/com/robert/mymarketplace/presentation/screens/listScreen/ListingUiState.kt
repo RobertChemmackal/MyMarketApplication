@@ -6,7 +6,9 @@ data class ListingUiState(
     val marketItemListings: List<MarketItemListing> = emptyList(),
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
+    val isSyncing: Boolean = false,
     val isOffline: Boolean = false,
+    val showOfflineDialog: Boolean = false,
     val error: String? = null,
     val message: String? = null
 )

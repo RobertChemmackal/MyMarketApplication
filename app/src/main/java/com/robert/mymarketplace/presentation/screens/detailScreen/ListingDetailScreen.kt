@@ -10,6 +10,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -86,12 +88,54 @@ fun ListingDetailScreen(
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = listing.title,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = listing.title,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                    
+                    Surface(
+                        shape = MaterialTheme.shapes.small,
+                        color = if (listing.syncStatus == 1) {
+                            if (uiState.isOffline) Color.LightGray.copy(alpha = 0.2f) else Color.Green.copy(alpha = 0.2f)
+                        } else Color.Red.copy(alpha = 0.2f),
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (listing.syncStatus == 1) Icons.Default.CloudDone else Icons.Default.Sync,
+                                contentDescription = null,
+                                tint = if (listing.syncStatus == 1) {
+                                    if (uiState.isOffline) Color.Gray else Color(0xFF2E7D32)
+                                } else Color.Red,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = when {
+                                    listing.syncStatus == 1 && uiState.isOffline -> "Cached"
+                                    listing.syncStatus == 1 -> "Synced"
+                                    else -> "Unsynced"
+                                },
+                                color = if (listing.syncStatus == 1) {
+                                    if (uiState.isOffline) Color.Gray else Color(0xFF2E7D32)
+                                } else Color.Red,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
 
                 Text(
                     text = "$${listing.price}",

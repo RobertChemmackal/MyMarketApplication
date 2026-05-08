@@ -75,6 +75,7 @@ class MockInterceptor : Interceptor {
                 )
 
                 val now = System.currentTimeMillis()
+                val dayInMillis = 86400000L
                 val listings = (1..200).map { i ->
                     val index = (i - 1) % titles.size
                     val title = titles[index]
@@ -90,7 +91,7 @@ class MockInterceptor : Interceptor {
                         "price": $price,
                         "imageUrl": "$BASE_IMAGE_URL=$i",
                         "isFavorite": false,
-                        "createdAt": ${now - (i * 1000)},
+                        "createdAt": ${now - (i * 1000) - dayInMillis},
                         "phoneNumber": "$phone",
                         "ownerName": "$owner"
                     }

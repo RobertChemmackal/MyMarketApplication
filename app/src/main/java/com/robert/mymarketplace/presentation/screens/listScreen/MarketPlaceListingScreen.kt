@@ -10,7 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Sync
-import androidx.compose.material.icons.filled.SyncDisabled
+import androidx.compose.material.icons.filled.CloudDone
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.material.icons.filled.Call
@@ -53,7 +53,21 @@ fun MarketPlaceListingScreen(
     LaunchedEffect(uiState.message) {
         uiState.message?.let {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.onEvent(ListingEvent.ClearMessage)
         }
+    }
+
+    if (uiState.showOfflineDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.onEvent(ListingEvent.DismissOfflineDialog) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.onEvent(ListingEvent.DismissOfflineDialog) }) {
+                    Text("OK")
+                }
+            },
+            title = { Text(stringResource(R.string.offline)) },
+            text = { Text(stringResource(R.string.sync_data)) }
+        )
     }
 
     BackHandler {
@@ -75,28 +89,40 @@ fun MarketPlaceListingScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (uiState.isLoading && uiState.marketItemListings.isEmpty()) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (uiState.error != null && uiState.marketItemListings.isEmpty()) {
-                Text(
-                    text = uiState.error ?: stringResource(R.string.unknown_error),
-                    modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.error
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(uiState.marketItemListings, key = { it.id }) { marketItem ->
-                        ListingItem(
-                            uiState,
-                            marketItemListing = marketItem,
-                            onFavoriteClick = { viewModel.onEvent(ListingEvent.ToggleFavorite(marketItem)) },
-                            onItemClick = { navController.navigate(Screen.Detail.createRoute(marketItem.id)) },
-                            onSyncClick = { viewModel.onEvent(ListingEvent.SyncIndividualMarketCard(marketItem)) }
+            Column(modifier = Modifier.fillMaxSize()) {
+                if (uiState.isSyncing && uiState.marketItemListings.isNotEmpty()) {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                if (uiState.isLoading && uiState.marketItemListings.isEmpty()) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                } else if (uiState.error != null && uiState.marketItemListings.isEmpty()) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = uiState.error ?: stringResource(R.string.unknown_error),
+                            color = MaterialTheme.colorScheme.error
                         )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(uiState.marketItemListings, key = { it.id }) { marketItem ->
+                            ListingItem(
+                                uiState,
+                                marketItemListing = marketItem,
+                                onFavoriteClick = { viewModel.onEvent(ListingEvent.ToggleFavorite(marketItem)) },
+                                onItemClick = { navController.navigate(Screen.Detail.createRoute(marketItem.id)) },
+                                onSyncClick = { viewModel.onEvent(ListingEvent.SyncIndividualMarketCard(marketItem)) }
+                            )
+                        }
                     }
                 }
             }
@@ -143,19 +169,25 @@ fun ListingItem(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
-                            imageVector = if (marketItemListing.syncStatus == 1) Icons.Default.Sync else Icons.Default.SyncDisabled,
+                            imageVector = if (marketItemListing.syncStatus == 1) Icons.Default.CloudDone else Icons.Default.Sync,
                             contentDescription = stringResource(R.string.sync_status_content_description),
-                            tint = if (marketItemListing.syncStatus == 1) Color.Green else Color.White,
+                            tint = if (marketItemListing.syncStatus == 1) {
+                                if (uiState.isOffline) Color.LightGray else Color.Green
+                            } else Color.White,
                             modifier = Modifier.size(16.dp)
                         )
-                        if (marketItemListing.syncStatus == 0) {
-                            Text(
-                                text = stringResource(R.string.sync_now),
-                                color = Color.White,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                        Text(
+                            text = when {
+                                marketItemListing.syncStatus == 1 && uiState.isOffline -> "Cached"
+                                marketItemListing.syncStatus == 1 -> "Synced"
+                                else -> stringResource(R.string.sync_now)
+                            },
+                            color = if (marketItemListing.syncStatus == 1) {
+                                if (uiState.isOffline) Color.LightGray else Color.Green
+                            } else Color.White,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
 

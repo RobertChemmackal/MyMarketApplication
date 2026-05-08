@@ -14,6 +14,7 @@ fun ListingDto.toListing(): MarketItemListing {
         isFavorite = isFavorite,
         createdAt = createdAt,
         syncStatus = 1,
+        network = 1,
         phoneNumber = phoneNumber ?: "+254700000000",
         ownerName = ownerName ?: "Unknown Owner"
     )
@@ -43,6 +44,7 @@ fun ListingEntity.toListing(): MarketItemListing {
         isFavorite = isFavorite,
         createdAt = createdAt,
         syncStatus = syncStatus,
+        network = network,
         phoneNumber = phoneNumber,
         ownerName = ownerName
     )
@@ -58,6 +60,7 @@ fun MarketItemListing.toListingEntity(): ListingEntity {
         isFavorite = isFavorite,
         createdAt = createdAt,
         syncStatus = syncStatus,
+        network = network,
         phoneNumber = phoneNumber,
         ownerName = ownerName
     )
@@ -73,6 +76,7 @@ fun ListingDto.toListingEntity(): ListingEntity {
         isFavorite = isFavorite,
         createdAt = createdAt,
         syncStatus = 1,
+        network = 1,
         phoneNumber = phoneNumber ?: "+254700000000",
         ownerName = ownerName ?: "Unknown Owner"
     )

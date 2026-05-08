@@ -26,6 +26,7 @@ data class ListingEntity(
     val isFavorite: Boolean,
     val createdAt: Long,
     val syncStatus: Int,
+    val network: Int = 1,
     val phoneNumber: String = "+254700000000",
     val ownerName: String = "Demo User"
 )

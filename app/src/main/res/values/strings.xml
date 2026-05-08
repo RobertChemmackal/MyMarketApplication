@@ -28,4 +28,6 @@
     <string name="market_desc">Marketplace at your fingertips.\nEmphasizes the convenience of the mobile app</string>
     <string name="no_listing">Listing not found</string>
     <string name="listing_details">Listing Details</string>
+    <string name="offline">You are offline</string>
+    <string name="sync_data">Your data will be synced automatically once you are back online.</string>
 </resources>

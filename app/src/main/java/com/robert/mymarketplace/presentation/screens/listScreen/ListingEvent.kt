@@ -15,4 +15,6 @@ sealed class ListingEvent {
         val phoneNumber: String,
         val ownerName: String
     ) : ListingEvent()
+    object DismissOfflineDialog : ListingEvent()
+    object ClearMessage : ListingEvent()
 }
