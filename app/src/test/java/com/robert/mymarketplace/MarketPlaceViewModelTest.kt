@@ -1,10 +1,12 @@
 package com.robert.mymarketplace
 
+import com.robert.mymarketplace.domain.model.MarketItemListing
 import com.robert.mymarketplace.presentation.screens.MarketPlaceViewModel
 
 
 import com.robert.mymarketplace.domain.usecase.*
 import com.robert.mymarketplace.presentation.screens.listScreen.ListingEvent
+import com.robert.mymarketplace.util.NetworkObserver
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
@@ -25,7 +27,7 @@ class MarketPlaceViewModelTest {
     private val toggleFavoriteUseCase = mockk<ToggleFavoriteUseCase>(relaxed = true)
 
     private lateinit var viewModel: MarketPlaceViewModel
-
+    private val networkObserver = mockk<NetworkObserver>(relaxed = true)
     private val testDispatcher = StandardTestDispatcher()
 
 
@@ -42,7 +44,7 @@ class MarketPlaceViewModelTest {
             syncListingUseCase,
             syncPendingListingsUseCase,
             createListingUseCase,
-            toggleFavoriteUseCase
+            toggleFavoriteUseCase, networkObserver
         )
     }
 
@@ -68,13 +70,46 @@ class MarketPlaceViewModelTest {
 
     @Test
     fun `sync pending should update success message`() = runTest {
+
+        val pendingListing = MarketItemListing(
+            id = "1",
+            title = "Laptop",
+            description = "Gaming Laptop",
+            price = 1000.0,
+            imageUrl = "",
+            isFavorite = false,
+            createdAt = System.currentTimeMillis(),
+            syncStatus = 0,
+            phoneNumber = "9999999999",
+            ownerName = "Test"
+        )
+
+        coEvery { getListingsUseCase() } returns flowOf(listOf(pendingListing))
+
         coEvery { syncPendingListingsUseCase() } returns Result.success(Unit)
 
+        viewModel = MarketPlaceViewModel(
+            getListingsUseCase,
+            refreshListingsUseCase,
+            syncListingUseCase,
+            syncPendingListingsUseCase,
+            createListingUseCase,
+            toggleFavoriteUseCase,
+            networkObserver
+        )
+
+        advanceUntilIdle()
+
         viewModel.syncPending()
+
         advanceUntilIdle()
 
         coVerify { syncPendingListingsUseCase() }
-        assertEquals("Sync complete", viewModel.uiState.value.message)
+
+        assertEquals(
+            "Sync complete",
+            viewModel.uiState.value.message
+        )
     }
 
 
@@ -85,7 +120,9 @@ class MarketPlaceViewModelTest {
                 title = "Phone",
                 description = "Good phone",
                 price = 100.0,
-                imageUri = null
+                imageUri = null,
+                ownerName = "Test user ",
+                phoneNumber = "0987654321"
             )
         )
 
