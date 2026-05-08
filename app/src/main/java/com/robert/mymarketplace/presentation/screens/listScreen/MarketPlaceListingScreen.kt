@@ -58,6 +58,7 @@ fun MarketPlaceListingScreen(
     }
 
     Scaffold(
+        modifier = Modifier.padding(innerPadding),
         floatingActionButton = {
             FloatingActionButton(onClick = { navController.navigate(Screen.AddEdit.route) }) {
                 Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_listing_content_description))
@@ -70,7 +71,6 @@ fun MarketPlaceListingScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(innerPadding)
         ) {
             if (uiState.isLoading && uiState.marketItemListings.isEmpty()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

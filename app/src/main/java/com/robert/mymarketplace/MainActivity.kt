@@ -7,9 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.stringResource
@@ -19,11 +22,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.robert.mymarketplace.presentation.navigation.Screen
+import com.robert.mymarketplace.presentation.screens.FavoritesScreen
 import com.robert.mymarketplace.presentation.screens.MarketPlaceListingScreen
 import com.robert.mymarketplace.presentation.screens.MarketPlaceViewModel
 import com.robert.mymarketplace.presentation.screens.addListingScreen.AddListingScreen
@@ -51,12 +57,15 @@ class MainActivity : ComponentActivity() {
 fun MainContent() {
     val navController = rememberNavController()
     val viewModel: MarketPlaceViewModel = hiltViewModel()
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    val showBottomBar = currentDestination?.route in listOf(Screen.Listing.route, Screen.Favorites.route)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            if (currentRoute == Screen.Listing.route) {
+            if (showBottomBar) {
                 TopAppBar(
                     title = {
                         Text(
@@ -80,7 +89,34 @@ fun MainContent() {
                     }
                 )
             }
-        }) { innerPadding ->
+        },
+        bottomBar = {
+            if (showBottomBar) {
+                NavigationBar {
+                    val items = listOf(
+                        Triple(Screen.Listing, Icons.AutoMirrored.Filled.List, R.string.nav_list),
+                        Triple(Screen.Favorites, Icons.Default.Favorite, R.string.nav_favorites)
+                    )
+                    items.forEach { (screen, icon, labelRes) ->
+                        NavigationBarItem(
+                            icon = { Icon(icon, contentDescription = stringResource(labelRes)) },
+                            label = { Text(stringResource(labelRes)) },
+                            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                            onClick = {
+                                navController.navigate(screen.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = Screen.Splash.route
@@ -91,9 +127,13 @@ fun MainContent() {
             composable(Screen.Listing.route) {
                 MarketPlaceListingScreen(navController, innerPadding, viewModel)
             }
+            composable(Screen.Favorites.route) {
+                FavoritesScreen(navController, innerPadding, viewModel)
+            }
             composable(Screen.AddEdit.route) {
                 AddListingScreen(navController, viewModel)
             }
         }
     }
 }
+

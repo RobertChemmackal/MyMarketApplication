@@ -19,4 +19,7 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="sync_all_content_description">Sync All Pending</string>
+    <string name="no_favorites">No favorites yet</string>
+    <string name="nav_list">List</string>
+    <string name="nav_favorites">Favorites</string>
 </resources>
