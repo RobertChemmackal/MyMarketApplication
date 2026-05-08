@@ -123,9 +123,9 @@ fun ListingDetailScreen(
                             )
                             Text(
                                 text = when {
-                                    listing.syncStatus == 1 && uiState.isOffline -> "Cached"
-                                    listing.syncStatus == 1 -> "Synced"
-                                    else -> "Unsynced"
+                                    listing.syncStatus == 1 && uiState.isOffline -> stringResource(R.string.cached)
+                                    listing.syncStatus == 1 -> stringResource(R.string.synced)
+                                    else -> stringResource(R.string.unsync)
                                 },
                                 color = if (listing.syncStatus == 1) {
                                     if (uiState.isOffline) Color.Gray else Color(0xFF2E7D32)
@@ -180,7 +180,7 @@ fun ListingDetailScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Description",
+                    text = stringResource(R.string.desc),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )

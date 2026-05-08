@@ -30,7 +30,6 @@ class MarketPlaceRepositoryImpl @Inject constructor(
             // Get all local listings
             val localListings = dao.getAllListingsList().associateBy { it.id }
             
-            // Items from server, merged with local data (favorites, phone, etc.)
             val mergedRemoteEntities = remoteEntities.map { remote ->
                 localListings[remote.id]?.let { local ->
                     remote.copy(
@@ -43,9 +42,7 @@ class MarketPlaceRepositoryImpl @Inject constructor(
                     )
                 } ?: remote
             }
-            
-            // We DON'T want to delete local items that haven't been synced yet
-            // Room's upsert doesn't delete, so this is safe.
+
             dao.upsertListings(mergedRemoteEntities)
             
             Result.success(Unit)

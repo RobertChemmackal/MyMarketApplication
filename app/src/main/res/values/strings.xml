@@ -20,7 +20,7 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="sync_all_content_description">Sync All Pending</string>
-    <string name="no_favorites">No favorites yet</string>
+    <string name="no_favorites">No favorites found</string>
     <string name="nav_list">My Market</string>
     <string name="nav_favorites">Favorites</string>
     <string name="call">Call</string>
@@ -30,4 +30,8 @@
     <string name="listing_details">Listing Details</string>
     <string name="offline">You are offline</string>
     <string name="sync_data">Your data will be synced automatically once you are back online.</string>
+    <string name="cached">Cached</string>
+    <string name="synced">Synced</string>
+    <string name="unsync">Unsynced</string>
+    <string name="desc">Description</string>
 </resources>
