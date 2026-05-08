@@ -205,7 +205,7 @@ fun ListingDetailScreen(
                 ) {
                     Icon(Icons.Default.Call, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Call Owner", fontSize = 18.sp)
+                    Text(stringResource(R.string.call_owner), fontSize = 18.sp)
                 }
             }
         }
