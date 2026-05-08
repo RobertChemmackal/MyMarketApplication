@@ -67,12 +67,21 @@ class MockInterceptor : Interceptor {
                     "Wide-open pasture land with rich native grasses. Fully fenced with multiple water troughs. Suitable for cattle grazing, horse ranching, or large-scale solar farm installation."
                 )
 
+                val owners = listOf(
+                    "John D.", "Sarah W.", "Michael K.", "Emily C.",
+                    "David M.", "Jessica L.", "Andrew T.", "Olivia H.", "Brian O.",
+                    "Alice N.", "Peter J.", "Mary S.", "James B.", "Kevin W.",
+                    "Fiona M.", "George K.", "Grace P.", "Samuel L.", "Linda T.","Ram J"
+                )
+
                 val now = System.currentTimeMillis()
                 val listings = (1..200).map { i ->
                     val index = (i - 1) % titles.size
                     val title = titles[index]
                     val description = descriptions[index]
+                    val owner = owners[index]
                     val price = 45000.0 + (i * 1250.0)
+                    val phone = "+2547${(10000000..99999999).random()}"
                     """
                     {
                         "id": "$i",
@@ -81,7 +90,9 @@ class MockInterceptor : Interceptor {
                         "price": $price,
                         "imageUrl": "$BASE_IMAGE_URL=$i",
                         "isFavorite": false,
-                        "createdAt": ${now - (i * 1000)}
+                        "createdAt": ${now - (i * 1000)},
+                        "phoneNumber": "$phone",
+                        "ownerName": "$owner"
                     }
                     """.trimIndent()
                 }

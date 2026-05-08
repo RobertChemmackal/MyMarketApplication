@@ -10,5 +10,7 @@ data class ListingDto(
     val price: Double,
     val imageUrl: String,
     val isFavorite: Boolean,
-    val createdAt: Long
+    val createdAt: Long,
+    val phoneNumber: String? = null,
+    val ownerName: String? = null
 )

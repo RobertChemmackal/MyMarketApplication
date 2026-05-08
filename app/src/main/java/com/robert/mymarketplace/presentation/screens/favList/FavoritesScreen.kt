@@ -1,4 +1,4 @@
-package com.robert.mymarketplace.presentation.screens
+package com.robert.mymarketplace.presentation.screens.favList
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.robert.mymarketplace.R
+import com.robert.mymarketplace.presentation.navigation.Screen
+import com.robert.mymarketplace.presentation.screens.ListingItem
+import com.robert.mymarketplace.presentation.screens.MarketPlaceViewModel
 import com.robert.mymarketplace.presentation.screens.listScreen.ListingEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,8 +50,14 @@ fun FavoritesScreen(
                         uiState,
                         marketItemListing = marketItem,
                         onFavoriteClick = { viewModel.onEvent(ListingEvent.ToggleFavorite(marketItem)) },
-                        onItemClick = { },
-                        onSyncClick = { viewModel.onEvent(ListingEvent.SyncIndividualMarketCard(marketItem)) }
+                        onItemClick = { navController.navigate(Screen.Detail.createRoute(marketItem.id)) },
+                        onSyncClick = {
+                            viewModel.onEvent(
+                                ListingEvent.SyncIndividualMarketCard(
+                                    marketItem
+                                )
+                            )
+                        }
                     )
                 }
             }

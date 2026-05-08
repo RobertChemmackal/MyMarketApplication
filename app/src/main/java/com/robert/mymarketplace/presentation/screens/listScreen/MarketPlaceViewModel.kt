@@ -52,7 +52,7 @@ class MarketPlaceViewModel @Inject constructor(
                 toggleFavorite(event.marketItemListing)
             }
             is ListingEvent.CreateListing -> {
-                createListing(event.title, event.description, event.price, event.imageUri)
+                createListing(event.title, event.description, event.price, event.imageUri, event.phoneNumber, event.ownerName)
             }
         }
     }
@@ -111,7 +111,7 @@ class MarketPlaceViewModel @Inject constructor(
         }
     }
 
-    private fun createListing(title: String, description: String, price: Double, imageUri: String?) {
+    private fun createListing(title: String, description: String, price: Double, imageUri: String?, phoneNumber: String, ownerName: String) {
         viewModelScope.launch {
             val newListing = MarketItemListing(
                 id = UUID.randomUUID().toString(),
@@ -121,7 +121,9 @@ class MarketPlaceViewModel @Inject constructor(
                 imageUrl = imageUri ?: "",
                 isFavorite = false,
                 createdAt = System.currentTimeMillis(),
-                syncStatus = 0
+                syncStatus = 0,
+                phoneNumber = phoneNumber,
+                ownerName = ownerName
             )
             createListingUseCase(newListing)
         }

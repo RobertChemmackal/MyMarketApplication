@@ -40,6 +40,8 @@ fun AddListingScreen(
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+    var ownerName by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var tempPhotoUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -167,6 +169,21 @@ fun AddListingScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
+            OutlinedTextField(
+                value = phoneNumber,
+                onValueChange = { phoneNumber = it },
+                label = { Text(stringResource(R.string.phone_label)) },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+            )
+
+            OutlinedTextField(
+                value = ownerName,
+                onValueChange = { ownerName = it },
+                label = { Text("Owner Name") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
             Button(
                 onClick = {
                     viewModel.onEvent(
@@ -174,13 +191,15 @@ fun AddListingScreen(
                             title = title,
                             description = description,
                             price = price.toDoubleOrNull() ?: 0.0,
-                            imageUri = imageUri?.toString()
+                            imageUri = imageUri?.toString(),
+                            phoneNumber = phoneNumber,
+                            ownerName = ownerName
                         )
                     )
                     navController.popBackStack()
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = title.isNotBlank() && price.isNotBlank()
+                enabled = title.isNotBlank() && price.isNotBlank() && phoneNumber.isNotBlank() && ownerName.isNotBlank()
             ) {
                 Text(stringResource(R.string.create_listing))
             }

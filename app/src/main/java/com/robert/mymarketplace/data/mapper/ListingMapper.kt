@@ -13,7 +13,9 @@ fun ListingDto.toListing(): MarketItemListing {
         imageUrl = imageUrl,
         isFavorite = isFavorite,
         createdAt = createdAt,
-        syncStatus = 1
+        syncStatus = 1,
+        phoneNumber = phoneNumber ?: "+254700000000",
+        ownerName = ownerName ?: "Unknown Owner"
     )
 }
 
@@ -25,7 +27,9 @@ fun MarketItemListing.toListingDto(): ListingDto {
         price = price,
         imageUrl = imageUrl,
         isFavorite = isFavorite,
-        createdAt = createdAt
+        createdAt = createdAt,
+        phoneNumber = phoneNumber,
+        ownerName = ownerName
     )
 }
 
@@ -38,7 +42,9 @@ fun ListingEntity.toListing(): MarketItemListing {
         imageUrl = imageUrl,
         isFavorite = isFavorite,
         createdAt = createdAt,
-        syncStatus = syncStatus
+        syncStatus = syncStatus,
+        phoneNumber = phoneNumber,
+        ownerName = ownerName
     )
 }
 
@@ -51,7 +57,9 @@ fun MarketItemListing.toListingEntity(): ListingEntity {
         imageUrl = imageUrl,
         isFavorite = isFavorite,
         createdAt = createdAt,
-        syncStatus = syncStatus
+        syncStatus = syncStatus,
+        phoneNumber = phoneNumber,
+        ownerName = ownerName
     )
 }
 
@@ -64,6 +72,8 @@ fun ListingDto.toListingEntity(): ListingEntity {
         imageUrl = imageUrl,
         isFavorite = isFavorite,
         createdAt = createdAt,
-        syncStatus = 1
+        syncStatus = 1,
+        phoneNumber = phoneNumber ?: "+254700000000",
+        ownerName = ownerName ?: "Unknown Owner"
     )
 }

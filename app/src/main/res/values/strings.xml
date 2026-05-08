@@ -15,11 +15,15 @@
     <string name="title_label">Title</string>
     <string name="description_label">Description</string>
     <string name="price_label">Price</string>
+    <string name="phone_label">Phone Number</string>
     <string name="create_listing">Create Listing</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="sync_all_content_description">Sync All Pending</string>
     <string name="no_favorites">No favorites yet</string>
-    <string name="nav_list">List</string>
+    <string name="nav_list">My Market</string>
     <string name="nav_favorites">Favorites</string>
+    <string name="call">Call</string>
+    <string name="call_content_description">Call seller</string>
+    <string name="market_desc">Marketplace at your fingertips.\nEmphasizes the convenience of the mobile app</string>
 </resources>

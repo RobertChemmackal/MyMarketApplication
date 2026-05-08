@@ -14,6 +14,7 @@ import androidx.room.PrimaryKey
  * @property isFavorite Indicates if the user has marked this listing as a favorite.
  * @property createdAt Timestamp of when the listing was created.
  * @property syncStatus Status of synchronization with the remote server.
+ * @property phoneNumber Contact phone number for the listing.
  */
 @Entity(tableName = "listings")
 data class ListingEntity(
@@ -24,5 +25,7 @@ data class ListingEntity(
     val imageUrl: String,
     val isFavorite: Boolean,
     val createdAt: Long,
-    val syncStatus: Int
+    val syncStatus: Int,
+    val phoneNumber: String = "+254700000000",
+    val ownerName: String = "Demo User"
 )

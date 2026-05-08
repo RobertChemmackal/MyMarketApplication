@@ -11,6 +11,8 @@ sealed class ListingEvent {
         val title: String,
         val description: String,
         val price: Double,
-        val imageUri: String?
+        val imageUri: String?,
+        val phoneNumber: String,
+        val ownerName: String
     ) : ListingEvent()
 }

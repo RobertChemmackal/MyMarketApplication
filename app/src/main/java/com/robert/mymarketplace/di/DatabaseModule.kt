@@ -22,7 +22,8 @@ object DatabaseModule {
             context,
             MarketPlaceDatabase::class.java,
             "marketplace_db"
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

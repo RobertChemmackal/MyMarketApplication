@@ -11,6 +11,9 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.SyncDisabled
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -23,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -91,7 +95,7 @@ fun MarketPlaceListingScreen(
                             uiState,
                             marketItemListing = marketItem,
                             onFavoriteClick = { viewModel.onEvent(ListingEvent.ToggleFavorite(marketItem)) },
-                            onItemClick = {  },
+                            onItemClick = { navController.navigate(Screen.Detail.createRoute(marketItem.id)) },
                             onSyncClick = { viewModel.onEvent(ListingEvent.SyncIndividualMarketCard(marketItem)) }
                         )
                     }
@@ -156,11 +160,6 @@ fun ListingItem(
                     }
                 }
 
-
-                if (uiState.isLoading && marketItemListing.syncStatus == 1) {
-                     // Optionally show a small loader here if refreshing
-                }
-
                 IconButton(
                     onClick = onFavoriteClick,
                     modifier = Modifier.align(Alignment.BottomEnd)
@@ -182,15 +181,18 @@ fun ListingItem(
                     Text(
                         text = marketItemListing.title,
                         style = MaterialTheme.typography.titleMedium,
+                        fontSize =  20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.weight(1f),
                         maxLines = 2,
+                        color = Black,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = "$${marketItemListing.price}",
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = Black,
+                        fontSize =  18.sp,
                         fontWeight = FontWeight.ExtraBold
                     )
                 }
@@ -201,8 +203,49 @@ fun ListingItem(
                     text = marketItemListing.description,
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    color = Black
                 )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                val context = LocalContext.current
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Owner: ${marketItemListing.ownerName}",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Gray
+                        )
+                        Text(
+                            text = marketItemListing.phoneNumber,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    
+                    FilledTonalIconButton(
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_DIAL).apply {
+                                data = Uri.parse("tel:${marketItemListing.phoneNumber}")
+                            }
+                            context.startActivity(intent)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Call,
+                            contentDescription = stringResource(R.string.call_content_description),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
             }
         }
     }
