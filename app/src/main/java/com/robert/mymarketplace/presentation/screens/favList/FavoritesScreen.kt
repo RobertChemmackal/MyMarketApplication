@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.robert.mymarketplace.R
 import com.robert.mymarketplace.presentation.navigation.Screen
-import com.robert.mymarketplace.presentation.screens.ListingItem
+import com.robert.mymarketplace.presentation.screens.listScreen.ListingItem
 import com.robert.mymarketplace.presentation.screens.MarketPlaceViewModel
 import com.robert.mymarketplace.presentation.screens.listScreen.ListingEvent
 

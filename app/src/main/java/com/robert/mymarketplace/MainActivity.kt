@@ -30,7 +30,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.robert.mymarketplace.presentation.navigation.Screen
 import com.robert.mymarketplace.presentation.screens.favList.FavoritesScreen
-import com.robert.mymarketplace.presentation.screens.MarketPlaceListingScreen
+import com.robert.mymarketplace.presentation.screens.listScreen.MarketPlaceListingScreen
 import com.robert.mymarketplace.presentation.screens.MarketPlaceViewModel
 import com.robert.mymarketplace.presentation.screens.addListingScreen.AddListingScreen
 import com.robert.mymarketplace.presentation.screens.detailScreen.ListingDetailScreen

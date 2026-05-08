@@ -1,4 +1,4 @@
-package com.robert.mymarketplace.presentation.screens
+package com.robert.mymarketplace.presentation.screens.listScreen
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
@@ -38,8 +38,7 @@ import coil.compose.AsyncImage
 import com.robert.mymarketplace.R
 import com.robert.mymarketplace.domain.model.MarketItemListing
 import com.robert.mymarketplace.presentation.navigation.Screen
-import com.robert.mymarketplace.presentation.screens.listScreen.ListingEvent
-import com.robert.mymarketplace.presentation.screens.listScreen.ListingUiState
+import com.robert.mymarketplace.presentation.screens.MarketPlaceViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -135,7 +134,7 @@ fun ListingItem(
                     onClick = { if (marketItemListing.syncStatus == 0) onSyncClick() },
                     modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
                     shape = MaterialTheme.shapes.small,
-                    color = Color.Black.copy(alpha = 0.6f),
+                    color = Black.copy(alpha = 0.6f),
                     enabled = marketItemListing.syncStatus == 0
                 ) {
                     Row(
@@ -202,10 +201,11 @@ fun ListingItem(
                 Text(
                     text = marketItemListing.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    overflow = TextOverflow.Ellipsis,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    color = Black
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 14.sp,
+                    maxLines = 3,
+                    color = Black,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -220,8 +220,9 @@ fun ListingItem(
                         Text(
                             text = "Owner: ${marketItemListing.ownerName}",
                             style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.Normal,
-                            color = Color.Gray
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 16.sp,
+                            color = Color.DarkGray
                         )
                         Text(
                             text = marketItemListing.phoneNumber,

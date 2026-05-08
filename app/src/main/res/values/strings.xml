@@ -26,4 +26,6 @@
     <string name="call">Call</string>
     <string name="call_content_description">Call seller</string>
     <string name="market_desc">Marketplace at your fingertips.\nEmphasizes the convenience of the mobile app</string>
+    <string name="no_listing">Listing not found</string>
+    <string name="listing_details">Listing Details</string>
 </resources>

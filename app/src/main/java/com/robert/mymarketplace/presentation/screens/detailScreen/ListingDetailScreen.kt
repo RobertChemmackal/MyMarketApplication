@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -41,7 +42,7 @@ fun ListingDetailScreen(
 
     if (listing == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Listing not found")
+            Text(stringResource(R.string.no_listing))
         }
         return
     }
@@ -49,7 +50,7 @@ fun ListingDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Listing Details") },
+                title = { Text(stringResource(R.string.listing_details)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -88,14 +89,16 @@ fun ListingDetailScreen(
                 Text(
                     text = listing.title,
                     style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp
                 )
-                
+
                 Text(
                     text = "$${listing.price}",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.ExtraBold
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 20.sp
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -110,11 +113,23 @@ fun ListingDetailScreen(
                         Text(
                             text = "Owner Details",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = Black
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = "Name: ${listing.ownerName}", style = MaterialTheme.typography.bodyLarge)
-                        Text(text = "Contact: ${listing.phoneNumber}", style = MaterialTheme.typography.bodyLarge)
+                        Text(
+                            text = "Name: ${listing.ownerName}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 16.sp,
+                            color = Black
+                        )
+                        Text(
+                            text = "Contact: ${listing.phoneNumber}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 16.sp,
+                            color = Black
+                        )
                     }
                 }
 
